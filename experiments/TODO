@@ -1,0 +1,6 @@
+1. Create One object abstract class which will contain size method;
+2. Create child class and package library;
+3. Create objective cache with memory mappings file;
+4. Every time object's non-const function is called, we've put dirty flag on this object;
+5. Implement queue/vector/array of the objects;
+6. Implement queue of write requests;
