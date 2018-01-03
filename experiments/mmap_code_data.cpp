@@ -1,5 +1,7 @@
 // C++ headers
 #include <iostream>
+#include <array>
+#include <limits>
 
 // C header
 #include <sys/mman.h>
@@ -30,19 +32,19 @@ int main(int argc, char *argv[])
         cout << argv[0] << " file [new-value]" << endl;
         exit(EXIT_FAILURE);
     }
-    fd = open(argv[1], O_RDWR);
+    fd = open(argv[1], O_RDWR, S_IRUSR | S_IWUSR);
     if (fd == -1) {
         cout << "The file " << argv[1] << " does not exist, creating a new one" << endl;
-        fd = open(argv[1], O_CREAT|O_RDWR);
+        fd = open(argv[1], O_CREAT|O_RDWR, S_IRUSR | S_IWUSR);
         if (fd == -1) {
            cerr << "Failed to create " << argv[1] << " file" << endl; 
            exit(EXIT_FAILURE);
         }
         first = true;
-        for(int b=0; b < MEM_SIZE; b++) {
-            // TODO(AM): Write zeros to the file!
-            //write(
-        }
+
+        std::array<char,MEM_SIZE> buf;
+        buf.fill(0);
+        write(fd, buf.data(), buf.size());
     }
     
 
@@ -55,16 +57,17 @@ int main(int argc, char *argv[])
     factorial = (uint64_t*) addr;
     number = (uint64_t*) (addr + sizeof(uint64_t));
 
-    if (!first)
+    if (first)
     {
         *factorial = (uint64_t)1;
         *number = (uint64_t)1; 
     }
     
 
-    while (true) {
-        *factorial *= *number + 1;
-        cout << "factorial = " << *factorial << endl;
+    while (*factorial < std::numeric_limits<uint64_t>::max() && *factorial != 0) {
+        *factorial *= (*number)++ ;
+
+        cout <<  *number << "! = " << *factorial << endl;
         if(msync(addr, MEM_SIZE, MS_SYNC) == -1) {
             cerr << "Mem sync error " << endl;
             exit(EXIT_FAILURE);
