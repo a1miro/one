@@ -39,7 +39,12 @@ int main(int argc, char *argv[])
            exit(EXIT_FAILURE);
         }
         first = true;
+        for(int b=0; b < MEM_SIZE; b++) {
+            // TODO(AM): Write zeros to the file!
+            //write(
+        }
     }
+    
 
     addr = (char*)mmap(NULL, MEM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (addr == MAP_FAILED) {
