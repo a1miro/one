@@ -65,13 +65,14 @@ int main(int argc, char *argv[])
     
 
     while (*factorial < std::numeric_limits<uint64_t>::max() && *factorial != 0) {
-        *factorial *= (*number)++ ;
+        *factorial *= ++(*number);
 
         cout <<  *number << "! = " << *factorial << endl;
         if(msync(addr, MEM_SIZE, MS_SYNC) == -1) {
             cerr << "Mem sync error " << endl;
             exit(EXIT_FAILURE);
         }
+        sleep(2);
     }
 
 
